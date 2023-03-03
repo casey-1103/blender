@@ -397,12 +397,12 @@ Mesh *MOD_solidify_nonmanifold_modifyMesh(ModifierData *md,
               if (k != i && edge_adj_faces_len[k] > 0 &&
                   (ELEM(vm[orig_edges[k].v1], v1, v2) != ELEM(vm[orig_edges[k].v2], v1, v2))) {
                 for (uint j = 0; j < edge_adj_faces[k]->faces_len && can_merge; j++) {
-                  const MPoly *poly = &orig_polys[edge_adj_faces[k]->faces[j]];
+                  const MPoly &poly = orig_polys[edge_adj_faces[k]->faces[j]];
                   uint changes = 0;
-                  int cur = poly->totloop - 1;
-                  for (int next = 0; next < poly->totloop && changes <= 2; next++) {
-                    uint cur_v = vm[orig_loops[poly->loopstart + cur].v];
-                    uint next_v = vm[orig_loops[poly->loopstart + next].v];
+                  int cur = poly.totloop - 1;
+                  for (int next = 0; next < poly.totloop && changes <= 2; next++) {
+                    uint cur_v = vm[orig_loops[poly.loopstart + cur].v];
+                    uint next_v = vm[orig_loops[poly.loopstart + next].v];
                     changes += (ELEM(cur_v, v1, v2) != ELEM(next_v, v1, v2));
                     cur = next;
                   }
@@ -1800,7 +1800,8 @@ Mesh *MOD_solidify_nonmanifold_modifyMesh(ModifierData *md,
               int k;
               for (k = 1; k + 1 < g->edges_len; k++, edge_ptr++) {
                 const MEdge *edge = &orig_edges[(*edge_ptr)->old_edge];
-                sub_v3_v3v3(tmp, orig_mvert_co[vm[edge->v1] == i ? edge->v2 : edge->v1], orig_mvert_co[i]);
+                sub_v3_v3v3(
+                    tmp, orig_mvert_co[vm[edge->v1] == i ? edge->v2 : edge->v1], orig_mvert_co[i]);
                 add_v3_v3(move_nor, tmp);
               }
               if (k == 1) {

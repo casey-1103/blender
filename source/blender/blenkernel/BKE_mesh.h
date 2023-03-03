@@ -444,15 +444,6 @@ void BKE_mesh_calc_normals_poly_and_vertex(const float (*vert_positions)[3],
                                            float (*r_vert_normals)[3]);
 
 /**
- * Calculate vertex and face normals, storing the result in custom data layers on the mesh.
- *
- * \note It is usually preferable to calculate normals lazily with
- * #BKE_mesh_vert_normals_ensure, but some areas (perhaps unnecessarily)
- * can also calculate them eagerly.
- */
-void BKE_mesh_calc_normals(struct Mesh *me);
-
-/**
  * Called after calculating all modifiers.
  */
 void BKE_mesh_ensure_normals_for_display(struct Mesh *mesh);
@@ -871,15 +862,6 @@ bool BKE_mesh_validate_all_customdata(struct CustomData *vdata,
                                       bool *r_change);
 
 void BKE_mesh_strip_loose_faces(struct Mesh *me);
-/**
- * Works on both loops and polys!
- *
- * \note It won't try to guess which loops of an invalid poly to remove!
- * this is the work of the caller, to mark those loops.
- * See e.g. #BKE_mesh_validate_arrays().
- */
-void BKE_mesh_strip_loose_polysloops(struct Mesh *me);
-void BKE_mesh_strip_loose_edges(struct Mesh *me);
 
 /**
  * Calculate edges from polygons.
@@ -921,7 +903,7 @@ void BKE_mesh_debug_print(const struct Mesh *me) ATTR_NONNULL(1);
 
 /**
  * \return The material index for each polygon. May be null.
- * \note In C++ code, prefer using the attribute API (#MutableAttributeAccessor)/
+ * \note In C++ code, prefer using the attribute API (#AttributeAccessor).
  */
 BLI_INLINE const int *BKE_mesh_material_indices(const Mesh *mesh)
 {
@@ -930,7 +912,7 @@ BLI_INLINE const int *BKE_mesh_material_indices(const Mesh *mesh)
 
 /**
  * \return The material index for each polygon. Create the layer if it doesn't exist.
- * \note In C++ code, prefer using the attribute API (#MutableAttributeAccessor)/
+ * \note In C++ code, prefer using the attribute API (#MutableAttributeAccessor).
  */
 BLI_INLINE int *BKE_mesh_material_indices_for_write(Mesh *mesh)
 {
